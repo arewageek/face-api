@@ -2,18 +2,17 @@ from fastapi import FastAPI
 from deepface import DeepFace
 from pydantic import BaseModel
 import base64
-import requests
 import tempfile
-import mimetypes
 
 
 api = FastAPI()
 
-class FaceRequest(BaseModel):
+class Verify(BaseModel):
     reference: str
-    image: str
+    photo: str
 
-def base64_to_temp_image(base64_str: str, suffix=".jpg") -> str:
+
+def decode(base64_str: str, suffix=".jpg") -> str:
     try:
         if "," in base64_str:
             base64_str = base64_str.split(",")[-1]
@@ -31,24 +30,28 @@ def base64_to_temp_image(base64_str: str, suffix=".jpg") -> str:
 
 
 @api.post("/verify")
-async def verify(data: FaceRequest):
+async def verify(data: Verify):
     try:
-        ref_img = base64_to_temp_image(data.reference)
-        test_img = base64_to_temp_image(data.image)
+        reference = decode(data.reference)
+        photo = decode(data.photo)
 
-        print({"ref": ref_img, "test": test_img})
-
-        result = DeepFace.verify(img1_path=ref_img, img2_path=test_img, threshold=0.3)
+        result = DeepFace.verify(img1_path=reference, img2_path=photo, threshold=0.4)
 
         print({"result": result});
 
         return {
-            "status_code": 200,
+            "status": "success",
+            "satus_code": 200,
             "data": result
         }
 
     except Exception as e:
         return {
+            "status": "error",
+            "status_code": 400,
+            "data": str(e)
+        }
+
             "status_code": 400,
             "data": str(e)
         }
