@@ -1,0 +1,10 @@
+[project]
+name = "face-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "deepface[standard]>=0.0.99",
+    "fastapi>=0.135.1",
+    "requests>=2.32.5",
+    "uvicorn[standard]>=0.42.0",
+]
