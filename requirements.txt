@@ -1,5 +1,4 @@
 fastapi
-deepface[0.0.93]
+deepface[standard]
 uvicorn[standard]
-pillow
 requests

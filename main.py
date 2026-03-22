@@ -58,7 +58,6 @@ async def verify(data: Verify):
 async def detect(data: Detect):
     try:
         photo = decode(data.photo)
-        
         result = DeepFace.extract_faces(img_path = photo, detector_backend="opencv", enforce_detection=False)
 
         print({"result": {
